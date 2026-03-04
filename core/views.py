@@ -1,11 +1,13 @@
 from rest_framework import viewsets, permissions, generics, status
+from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.models import User
 
 from .models import Child, Category, ClothingItem
 from .serializers import (
-    ChildSerializer, CategorySerializer, ClothingItemSerializer,
+    UserSerializer, ChildSerializer, CategorySerializer, ClothingItemSerializer,
     RegisterSerializer
 )
 
@@ -52,3 +54,11 @@ class ClothingItemViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(child_id=child_id)
             
         return queryset
+
+
+class MeView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
