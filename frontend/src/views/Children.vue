@@ -119,8 +119,10 @@ const calculateAge = (birthDate) => {
 
 const getImageUrl = (path) => {
   if (!path) return 'https://via.placeholder.com/80x80?text=No+Photo';
+
   if (path.startsWith('http')) return path;
-  return `http://127.0.0.1:8000${path}`; 
+  
+  return path; 
 };
 </script>
 

@@ -10,7 +10,7 @@ urlpatterns = [
     # API endpoints
     path('api/', include('core.urls')),
     
-    # Логин (получение токена) - вынесено в главный файл для удобства
+    # Логин (получение токена)
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
 ]
 

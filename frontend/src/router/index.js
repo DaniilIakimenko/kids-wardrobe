@@ -6,6 +6,7 @@ import Register from '@/views/Register.vue';
 import Wardrobe from '@/views/Wardrobe.vue';
 import Children from '@/views/Children.vue';
 import Profile from '@/views/Profile.vue';
+import AddItem from '@/views/AddItem.vue';
 
 const routes = [
   {
@@ -13,25 +14,12 @@ const routes = [
     component: MainLayout,
     meta: { requiresAuth: true },
     children: [
-      {
-        path: '',
-        redirect: '/wardrobe'
-      },
-      {
-        path: 'wardrobe',
-        name: 'Wardrobe',
-        component: Wardrobe
-      },
-      {
-        path: 'children',
-        name: 'Children',
-        component: Children
-      },
-      {
-        path: 'profile',
-        name: 'Profile',
-        component: Profile // Заглушка
-      }
+      { path: '', redirect: '/wardrobe' },
+      { path: 'wardrobe', name: 'Wardrobe', component: Wardrobe },
+      { path: 'children', name: 'Children', component: Children },
+      { path: 'profile', name: 'Profile', component: Profile },
+      { path: 'add-item', name: 'AddItem', component: AddItem },
+      { path: 'edit-item/:id', name: 'EditItem', component: AddItem }
     ]
   },
   {

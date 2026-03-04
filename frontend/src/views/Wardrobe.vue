@@ -16,21 +16,32 @@
     </div>
 
     <div v-else :class="$style.grid">
-      <div v-for="item in clothesStore.clothes" :key="item.id" :class="$style.card">
-        <img 
-          :src="getImageUrl(item.photo)" 
-          :class="$style.image"
-          alt="Clothing"
-        />
-        <div :class="$style.cardBody">
-          <h3>{{ item.name }}</h3>
-          <p>Размер: {{ item.size }}</p>
-          <span :class="[$style.status, $style[item.status]]">
-            {{ item.status_display }}
-          </span>
+      <router-link 
+        v-for="item in clothesStore.clothes" 
+        :key="item.id" 
+        :to="`/edit-item/${item.id}`"
+        :class="$style.cardLink"
+      >
+        <div :class="$style.card">
+          <img 
+            :src="getImageUrl(item.photo)" 
+            :class="$style.image"
+            alt="Clothing"
+          />
+          <div :class="$style.cardBody">
+            <h3>{{ item.name }}</h3>
+            <p>Размер: {{ item.size }}</p>
+            <span :class="[$style.status, $style[item.status]]">
+              {{ item.status_display }}
+            </span>
+          </div>
         </div>
-      </div>
+      </router-link>
     </div>
+
+    <router-link to="/add-item" :class="$style.fab">
+      +
+    </router-link>
   </div>
 </template>
 
@@ -41,7 +52,6 @@ import { useClothesStore } from '@/stores/clothes';
 
 const childrenStore = useChildrenStore();
 const clothesStore = useClothesStore();
-
 const selectedChildId = ref(null);
 
 onMounted(async () => {
@@ -55,13 +65,17 @@ const loadClothes = () => {
 
 const getImageUrl = (path) => {
   if (!path) return 'https://via.placeholder.com/100x100?text=Cloth';
-  return `http://127.0.0.1:8000${path}`;
+  
+  if (path.startsWith('http')) return path;
+
+  return path;
 };
 </script>
 
 <style module>
 .page {
-  padding-bottom: 20px;
+  padding-bottom: 80px;
+  position: relative;
 }
 
 .title {
@@ -84,6 +98,11 @@ const getImageUrl = (path) => {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
+}
+
+.cardLink {
+  text-decoration: none;
+  color: inherit;
 }
 
 .card {
@@ -146,5 +165,28 @@ const getImageUrl = (path) => {
   text-align: center;
   margin-top: 3rem;
   color: #888;
+}
+
+.fab {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  background-color: #42b883;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  text-decoration: none;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  z-index: 999;
+  transition: transform 0.2s;
+}
+
+.fab:hover {
+  transform: scale(1.1);
 }
 </style>
