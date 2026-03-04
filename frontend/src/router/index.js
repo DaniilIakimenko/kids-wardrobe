@@ -1,14 +1,38 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import MainLayout from '@/layouts/MainLayout.vue';
+
 import Login from '@/views/Login.vue';
 import Register from '@/views/Register.vue';
-import Home from '@/views/Home.vue';
+import Wardrobe from '@/views/Wardrobe.vue';
+import Children from '@/views/Children.vue';
+import Profile from '@/views/Profile.vue';
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home,
-    meta: { requiresAuth: true }
+    component: MainLayout,
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: '',
+        redirect: '/wardrobe'
+      },
+      {
+        path: 'wardrobe',
+        name: 'Wardrobe',
+        component: Wardrobe
+      },
+      {
+        path: 'children',
+        name: 'Children',
+        component: Children
+      },
+      {
+        path: 'profile',
+        name: 'Profile',
+        component: Profile // Заглушка
+      }
+    ]
   },
   {
     path: '/login',
