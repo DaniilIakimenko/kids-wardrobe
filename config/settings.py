@@ -18,20 +18,24 @@ DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 
 INSTALLED_APPS = [
-    'cloudinary',
-    'cloudinary_storage',
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    
+    # Cloudinary (ПЕРЕД staticfiles!)
+    'cloudinary',
+    'cloudinary_storage',
+    
     'django.contrib.staticfiles',
 
+    # Сторонние
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
 
+    # Локальные
     'core',
 ]
 
@@ -135,16 +139,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-# --- Настройки Cloudinary ---
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.environ.get('CLOUDINARY_NAME'),
-    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
-    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
-}
-
-# Указываем Django сохранять медиа-файлы (картинки) в Cloudinary
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
@@ -153,8 +147,11 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+# Указываем Django сохранять медиа-файлы (картинки) в Cloudinary
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+#MEDIA_ROOT = BASE_DIR / 'media'
 
 if not DEBUG:
     CSRF_COOKIE_SECURE = True
