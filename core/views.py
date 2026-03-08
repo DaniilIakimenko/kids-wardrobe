@@ -1,4 +1,4 @@
-from rest_framework import viewsets, permissions, generics, status
+from rest_framework import viewsets, permissions, generics, status, exceptions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -23,9 +23,13 @@ class CategoryViewSet(viewsets.ModelViewSet):
     """Категории (общие для всех)"""
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    
-    # Можно разрешить только чтение категорий обычным юзерам, если нужно
-    # http_method_names = ['get', 'head', 'options'] 
+
+    http_method_names = ['get', 'head', 'options']
+
+    def get_permissions(self):
+        if self.action in ['create', 'update', 'destroy']:
+            return [permissions.IsAdminUser()]
+        return [permissions.IsAuthenticated()]
 
 
 class ChildViewSet(viewsets.ModelViewSet):
@@ -54,6 +58,23 @@ class ClothingItemViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(child_id=child_id)
             
         return queryset
+
+    def perform_create(self, serializer):
+        child_id = self.request.data.get('child')
+        
+        try:
+            child = Child.objects.get(id=child_id, parent=self.request.user)
+        except Child.DoesNotExist:
+            raise exceptions.ValidationError({"child": "У вас нет доступа к этому ребенку или он не существует."})
+            
+        serializer.save()
+
+    def perform_update(self, serializer):
+        child_id = self.request.data.get('child')
+        if child_id:
+            if not Child.objects.filter(id=child_id, parent=self.request.user).exists():
+                raise exceptions.ValidationError({"child": "Недопустимый ребенок."})
+        serializer.save()
 
 
 class MeView(APIView):
